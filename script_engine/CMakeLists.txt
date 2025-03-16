@@ -6,7 +6,7 @@ find_package(Lua REQUIRED)
 
 ####################### insert subdirectories here ##############################
 add_subdirectory(sol2)
-add_subdirectory(script_entity)
+add_subdirectory(script_object)
 
 #################################################################################
 
@@ -28,6 +28,7 @@ target_link_libraries(${PROJECT_NAME}
 PRIVATE
 	${LUA_LIBRARIES}
 PUBLIC
+	script_object
 	sol2
 )
 
