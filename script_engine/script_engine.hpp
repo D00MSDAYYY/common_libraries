@@ -9,7 +9,7 @@ namespace script
 class engine
 {
 public:
-	engine();
+	engine() { object obj{};};
 	engine( const engine& se )				   = delete;
 	engine&		operator= ( const engine& se ) = delete;
 
