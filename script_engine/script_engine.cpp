@@ -21,6 +21,7 @@ script_engine::remove_object( const std::string& name )
 	_state[ name ] = sol::nil;
 }
 
+
 void
 script_engine::do_code_globally( std::string script )
 {
