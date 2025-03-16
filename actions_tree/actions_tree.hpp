@@ -17,7 +17,7 @@ struct node_args // passed args 'lua-style table' for better readability
 {
 	const std::string		   name;
 	tags					   tags		   = {};
-	std::string				   script	   = {};
+	std::string				   script	   = {}; // TODO mb remove to make more generic class (and allow to subclass and add if needed)
 	std::vector< ch_node_ptr > children	   = {};
 	p_node_ptr				   parent	   = {};
 	std::string				   description = {};
@@ -25,7 +25,6 @@ struct node_args // passed args 'lua-style table' for better readability
 
 struct node
 {
-
 	const std::string		   _name;
 	tags					   _tags; // (like "modifying", "unsafe", "deprecated" etc.)
 	std::string				   _script;
@@ -60,6 +59,5 @@ struct node
 				std::move( args.description ) )
 	{
 	}
-
 };
 } // namespace actions_tree
