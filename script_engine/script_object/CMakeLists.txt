@@ -27,6 +27,8 @@ target_link_libraries(${PROJECT_NAME}
 PRIVATE
 	${LUA_LIBRARIES}
 	actions_tree
+PUBLIC 
+	script_engine
 
 )
 

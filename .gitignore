@@ -1,3 +1,5 @@
+test_lib.cpp
+
 # ---> VisualStudioCode
 .vscode/
 !.vscode/snpts.code-snippets
