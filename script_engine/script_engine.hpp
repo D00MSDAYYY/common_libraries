@@ -51,11 +51,11 @@ private:
 class proxy_engine : public engine
 {
 public:
-	virtual std::shared_ptr< proxy_engine > make_proxy( sol::environment env );
+	virtual std::shared_ptr< proxy_engine > make_proxy( sol::environment env ){};
 
-	virtual void							do_script( const std::string& script );
+	virtual void							do_script( const std::string& script ){};
 
-	virtual std::string						get_stack_dump();
+	virtual std::string						get_stack_dump(){};
 
 	template < typename T, typename... Args >
 	friend std::shared_ptr< T > make_engine( Args&&... args );
