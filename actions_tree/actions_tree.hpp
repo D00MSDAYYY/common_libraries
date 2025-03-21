@@ -3,6 +3,7 @@
 #include <string>
 #include <variant>
 #include <vector>
+#include <memory>
 
 // TODO! replace this library in the future with more consistent one
 
