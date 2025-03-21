@@ -35,6 +35,9 @@ public:
 
 	virtual std::string						get_stack_dump();
 
+	template < typename T, typename... Args >
+	friend std::shared_ptr< T > make_engine( Args&&... args );
+
 protected:
 	real_engine() { };
 
@@ -50,6 +53,9 @@ public:
 	virtual void							do_script( const std::string& script );
 
 	virtual std::string						get_stack_dump();
+
+	template < typename T, typename... Args >
+	friend std::shared_ptr< T > make_engine( Args&&... args );
 
 protected:
 	proxy_engine( std::weak_ptr< engine > ngn, sol::environment env )
