@@ -1,16 +1,16 @@
 #pragma once
 
+#include <memory>
 #include <string>
 #include <variant>
 #include <vector>
-#include <memory>
 
 // TODO! replace this library in the future with more consistent one
 
 namespace actions_tree
 {
-	
-using tags = const std::vector< std::string >;
+
+using tags_t = const std::vector< std::string >;
 
 template < typename >
 class node;
@@ -25,7 +25,7 @@ template < typename TYPE >
 struct node_args
 {
 	const std::string				   name;
-	tags							   tags		   = {};
+	tags_t							   tags		   = {};
 	std::vector< ch_node_ptr< TYPE > > children	   = {};
 	p_node_ptr< TYPE >				   parent	   = {};
 	std::string						   description = {};
@@ -39,7 +39,7 @@ struct node
 	// dependices
 
 	node( std::string name,
-		  tags		  tags							  = {},
+		  tags_t		  tags							  = {},
 		  std::vector< ch_node_ptr< TYPE > > children = {},
 		  p_node_ptr< TYPE > parent					  = {},
 		  std::string description					  = {},
@@ -62,7 +62,7 @@ struct node
 	}
 
 	const std::string				   _name;
-	tags							   _tags;
+	tags_t							   _tags;
 	p_node_ptr< TYPE >				   _parent;
 	std::vector< ch_node_ptr< TYPE > > _children;
 	std::string						   _description;
