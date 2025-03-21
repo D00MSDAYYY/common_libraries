@@ -10,15 +10,16 @@ class engine;
 
 class object
 {
-public:
-	object();
-	object( const object& obj )				= delete;
-	object& operator= ( const object& obj ) = delete;
+	// public:
+	// 	object();
+	// 	object( const object& obj )				= delete;
+	// 	object& operator= ( const object& obj ) = delete;
 
-	void	self_register( const engine& ngn ) const;
-	void	self_unregister( const engine& ngn ) const;
+	// 	void	self_register( const engine& ngn ) const;
+	// 	void	self_unregister( const engine& ngn ) const;
 
-private:
-	
+	// private:
+	public:
+	std::shared_ptr< sol::state > _state{};
 };
 } // namespace script

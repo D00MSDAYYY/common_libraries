@@ -7,16 +7,13 @@
 
 namespace script
 {
+
 class engine
 {
 public:
-	engine();
-	engine( const sol::environment& env )
-		: _env{ env } { };
+	engine() { };
 	engine( const engine& se )				   = delete;
 	engine&		operator= ( const engine& se ) = delete;
-
-	engine		wrap( const sol::environment& env );
 
 	void		add_object( const object& obj );
 	void		remove_object( const object& obj );
@@ -31,8 +28,7 @@ public:
 	std::string get_stack_dump();
 
 private:
-	sol::state						  _state{};
-	std::optional< sol::environment > _env{};
+	sol::state _state;
 };
 
 

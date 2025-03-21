@@ -8,7 +8,7 @@
 
 namespace actions_tree
 {
-
+	
 using tags = const std::vector< std::string >;
 
 template < typename >
