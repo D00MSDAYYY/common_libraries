@@ -19,7 +19,13 @@ class object
 	// 	void	self_unregister( const engine& ngn ) const;
 
 	// private:
-	public:
-	std::shared_ptr< sol::state > _state{};
+
+public:
+	object( std::weak_ptr< sol::state > state )
+		: _state{ state }
+	{
+	}
+
+	std::weak_ptr< sol::state > _state{};
 };
 } // namespace script
