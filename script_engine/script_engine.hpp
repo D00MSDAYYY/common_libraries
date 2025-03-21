@@ -24,22 +24,25 @@ protected:
 	engine() { };
 	engine( const engine& se )			   = delete;
 	engine& operator= ( const engine& se ) = delete;
+	virtual ~engine() { };
 };
 
 class real_engine : public engine
 {
 public:
-	virtual std::shared_ptr< proxy_engine > make_proxy( sol::environment env );
+	virtual std::shared_ptr< proxy_engine > make_proxy( sol::environment env ) { };
 
-	virtual void							do_script( const std::string& script );
+	virtual void							do_script( const std::string& script ) { };
 
-	virtual std::string						get_stack_dump();
+	virtual std::string						get_stack_dump() { };
 
 	template < typename T, typename... Args >
 	friend std::shared_ptr< T > make_engine( Args&&... args );
 
 protected:
 	real_engine() { };
+	virtual ~real_engine() { };
+
 
 private:
 	sol::state _state{};
@@ -61,6 +64,7 @@ protected:
 	proxy_engine( std::weak_ptr< engine > ngn, sol::environment env )
 		: _prnt_ngn{ ngn }
 		, _env{ env } { };
+	virtual ~proxy_engine() { };
 
 private:
 	std::weak_ptr< engine > _prnt_ngn{};
