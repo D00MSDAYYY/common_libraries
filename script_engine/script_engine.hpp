@@ -1,36 +1,72 @@
 #pragma once
 #define SOL_ALL_SAFETIES_ON 1
-#include "script_object.hpp"
 
-#include <optional>
+#include <memory>
 #include <sol/sol.hpp>
 
 namespace script
 {
+class proxy_engine;
 
 class engine
 {
 public:
+	virtual std::shared_ptr< proxy_engine > make_proxy( sol::environment env )	   = 0;
+
+	virtual void							do_script( const std::string& script ) = 0;
+
+	virtual std::string						get_stack_dump()					   = 0;
+
+	template < typename T, typename... Args >
+	friend std::shared_ptr< T > make_engine( Args&&... args );
+
+protected:
 	engine() { };
-	engine( const engine& se )				   = delete;
-	engine&		operator= ( const engine& se ) = delete;
-
-	void		add_object( const object& obj );
-	void		remove_object( const object& obj );
-
-	void		do_code_globally( const std::string& script );
-	void		do_code_separately( const std::string& script );
-
-	// TODO create api to inspect engine "internals" (first checking _env) to iterate over
-	// objects
-	// TODO create propagate_changes() dynamically change the passed objects (for example,
-	// from 'main_window' to 'sensor_page' and from 'sensor_page' to 'sensor')
-	std::string get_stack_dump();
-
-private:
-	sol::state _state;
+	engine( const engine& se )			   = delete;
+	engine& operator= ( const engine& se ) = delete;
 };
 
+class real_engine : public engine
+{
+public:
+	virtual std::shared_ptr< proxy_engine > make_proxy( sol::environment env );
+
+	virtual void							do_script( const std::string& script );
+
+	virtual std::string						get_stack_dump();
+
+protected:
+	real_engine() { };
+
+private:
+	sol::state _state{};
+};
+
+class proxy_engine : public engine
+{
+public:
+	virtual std::shared_ptr< proxy_engine > make_proxy( sol::environment env );
+
+	virtual void							do_script( const std::string& script );
+
+	virtual std::string						get_stack_dump();
+
+protected:
+	proxy_engine( std::weak_ptr< engine > ngn, sol::environment env )
+		: _prnt_ngn{ ngn }
+		, _env{ env } { };
+
+private:
+	std::weak_ptr< engine > _prnt_ngn{};
+	sol::environment		_env{};
+};
+
+template < typename T, typename... Args >
+std::shared_ptr< T >
+make_engine( Args&&... args )
+{
+	return std::shared_ptr< T >( new T( std::forward< Args >( args )... ) );
+}
 
 } // namespace script
 
