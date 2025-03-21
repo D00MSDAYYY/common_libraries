@@ -8,12 +8,12 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 #################################################################################
 
-add_library(${PROJECT_NAME}  INTERFACE)
+add_library(${PROJECT_NAME}  STATIC)
 
 target_sources(${PROJECT_NAME} 
 PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/actions_tree.hpp
-	# ${CMAKE_CURRENT_SOURCE_DIR}/actions_tree.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/actions_tree.cpp
 )
 
 target_include_directories(${PROJECT_NAME}

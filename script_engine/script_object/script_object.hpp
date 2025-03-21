@@ -19,5 +19,6 @@ public:
 	void	self_unregister( const engine& ngn ) const;
 
 private:
+	
 };
 } // namespace script
