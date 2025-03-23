@@ -10,14 +10,16 @@ namespace script
 class engine final : public std::enable_shared_from_this< engine >
 {
 public:
-	static auto
+	using ptr = std::shared_ptr< engine >;
+
+	static ptr
 	make_real_engine()
 	{
 		return std::shared_ptr< engine >( new engine{} );
 	};
 
 	/////////////////////////////////////////////////////////////////////
-	static auto
+	static ptr
 	make_proxy_engine( std::weak_ptr< engine > parent, sol::environment env )
 	{
 		return std::shared_ptr< engine >( new engine{ parent, env } );
@@ -302,6 +304,7 @@ public:
 				auto& [ _prnt_ptr, _env ]{ std::get< proxy_engine_data >( _data ) };
 				if ( auto prnt{ _prnt_ptr.lock() } )
 					{
+						
 						auto mod{ prnt->require( key, open_function, false ) };
 						if ( create_global == true ) _env [ key ] = mod;
 						return mod;
@@ -318,6 +321,7 @@ public:
 	{
 		if ( is_real() )
 			{
+				
 				return std::get< real_engine_data >( _data ).require_script(
 					key,
 					code,
@@ -610,8 +614,49 @@ public:
 	// 			  Value&&	 value,
 	// 			  Args&&... args );
 	/////////////////////////////////////////////////////////////////////
+	template < typename T >
+	sol::table_proxy< const sol::global_table&, sol::detail::proxy_key_t< T > >
+	operator[] ( T&& key ) const
+	{
+		if ( is_real() )
+			{
+				return std::get< real_engine_data >( _data )
+					.globals() [ std::forward< T >( key ) ];
+			}
+		else
+			{
+				auto& [ _prnt_ptr, _env ]{ std::get< proxy_engine_data >( _data ) };
+				if ( auto prnt{ _prnt_ptr.lock() } )
+					{
+						return _env [ std::forward< T >( key ) ];
+					}
+				else { throw std::runtime_error( "Parent engine is not available" ); }
+			}
+	}
 
-	virtual ~engine() { };
+	/////////////////////////////////////////////////////////////////////
+	template < typename T >
+	const sol::table_proxy< const sol::global_table&, sol::detail::proxy_key_t< T > >
+	operator[] ( T&& key ) const
+	{
+		if ( is_real() )
+			{
+				return std::get< real_engine_data >( _data )
+					.globals() [ std::forward< T >( key ) ];
+			}
+		else
+			{
+				auto& [ _prnt_ptr, _env ]{ std::get< proxy_engine_data >( _data ) };
+				if ( auto prnt{ _prnt_ptr.lock() } )
+					{
+						return _env [ std::forward< T >( key ) ];
+					}
+				else { throw std::runtime_error( "Parent engine is not available" ); }
+			}
+	}
+
+	/////////////////////////////////////////////////////////////////////
+	~engine() { };
 
 private:
 	engine()

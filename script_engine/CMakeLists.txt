@@ -28,7 +28,6 @@ target_link_libraries(${PROJECT_NAME}
 PRIVATE
 	${LUA_LIBRARIES}
 PUBLIC
-	script_object
 	sol2
 )
 
