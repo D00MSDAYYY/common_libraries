@@ -13,14 +13,14 @@ public:
 	static auto
 	make_real_engine()
 	{
-		return engine{};
+		return std::shared_ptr< engine >( new engine{} );
 	};
 
 	/////////////////////////////////////////////////////////////////////
 	static auto
 	make_proxy_engine( std::weak_ptr< engine > parent, sol::environment env )
 	{
-		return engine{ parent, env };
+		return std::shared_ptr< engine >( new engine{ parent, env } );
 	}
 
 	/////////////////////////////////////////////////////////////////////
