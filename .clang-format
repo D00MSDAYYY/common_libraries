@@ -82,7 +82,7 @@ BraceWrapping:
 BreakAdjacentStringLiterals: true
 BreakAfterAttributes: Always
 BreakAfterJavaFieldAnnotations: true
-BreakAfterReturnType: AllDefinitions
+BreakAfterReturnType: All
 BreakArrays: true
 BreakBeforeBinaryOperators: All
 BreakBeforeBraces: GNU
@@ -192,7 +192,7 @@ SkipMacroDefinitionBody: false
 SortIncludes: CaseSensitive
 SortJavaStaticImport: Before
 SortUsingDeclarations: LexicographicNumeric
-SpaceAfterCStyleCast: false
+SpaceAfterCStyleCast: true
 SpaceAfterLogicalNot: false
 SpaceAfterTemplateKeyword: true
 SpaceAroundPointerQualifiers: Default

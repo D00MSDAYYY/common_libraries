@@ -8,57 +8,56 @@ namespace script
 {
 class proxy_engine;
 
-class engine
+/////////////////////////////////////////////////////////////////////
+class engine : public std::enable_shared_from_this< engine >
 {
 public:
-	virtual std::shared_ptr< proxy_engine > make_proxy( sol::environment env )	   = 0;
+	virtual std::shared_ptr< proxy_engine >
+	make_proxy( sol::environment env ) = 0;
 
-	virtual void							do_script( const std::string& script ) = 0;
+	template < typename... Args >
+	void
+	open_libraries( Args&&... args );
 
-	virtual std::string						get_stack_dump()					   = 0;
-
-	template < typename T, typename... Args >
-	friend std::shared_ptr< T > make_engine( Args&&... args );
 	virtual ~engine() { };
 
 protected:
 	engine() { };
-	engine( const engine& se )			   = delete;
-	engine& operator= ( const engine& se ) = delete;
+	engine( const engine& se ) = delete;
+	engine&
+	operator= ( const engine& se )
+		= delete;
 };
 
+/////////////////////////////////////////////////////////////////////
 class real_engine : public engine
 {
 public:
-	virtual std::shared_ptr< proxy_engine > make_proxy( sol::environment env ) { };
+	static std::shared_ptr< real_engine >
+	create();
 
-	virtual void							do_script( const std::string& script ) { };
+	virtual std::shared_ptr< proxy_engine >
+	make_proxy( sol::environment env ) override;
 
-	virtual std::string						get_stack_dump() { };
-
-	template < typename T, typename... Args >
-	friend std::shared_ptr< T > make_engine( Args&&... args );
 	virtual ~real_engine() { };
 
 protected:
 	real_engine() { };
 
-
 private:
 	sol::state _state{};
 };
 
+/////////////////////////////////////////////////////////////////////
 class proxy_engine : public engine
 {
 public:
-	virtual std::shared_ptr< proxy_engine > make_proxy( sol::environment env ) { };
+	static std::shared_ptr< proxy_engine >
+	create( std::weak_ptr< engine > ngn, sol::environment env );
 
-	virtual void							do_script( const std::string& script ) { };
+	virtual std::shared_ptr< proxy_engine >
+	make_proxy( sol::environment env ) override;
 
-	virtual std::string						get_stack_dump() { };
-
-	template < typename T, typename... Args >
-	friend std::shared_ptr< T > make_engine( Args&&... args );
 	virtual ~proxy_engine() { };
 
 protected:
@@ -66,19 +65,10 @@ protected:
 		: _prnt_ngn{ ngn }
 		, _env{ env } { };
 
-
 private:
-	std::weak_ptr< engine > _prnt_ngn{};
+	std::weak_ptr< engine > _prnt_ngn;
 	sol::environment		_env{};
 };
 
-template < typename T, typename... Args >
-std::shared_ptr< T >
-make_engine( Args&&... args )
-{
-	return std::make_shared< T >( std::forward< Args >( args )... );
-}
-
+/////////////////////////////////////////////////////////////////////
 } // namespace script
-
-
