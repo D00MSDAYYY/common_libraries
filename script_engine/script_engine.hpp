@@ -49,7 +49,7 @@ public:
 				std::get< real_engine_data >( _data ).open_libraries(
 					std::forward< Args >( args )... );
 			}
-		else { throw std::runtime_error( "Cannot open libraries on a not real engine" ); }
+		else { throw std::runtime_error( "Cannot open libraries on a proxy engine" ); }
 	}
 
 	/////////////////////////////////////////////////////////////////////
@@ -69,10 +69,7 @@ public:
 				auto& [ _prnt_ptr, _env ]{ std::get< proxy_engine_data >( _data ) };
 				if ( auto prnt{ _prnt_ptr.lock() } )
 					{
-						return prnt->script( code,
-											 _env,
-											 chunk_name,
-											 mode ); //! dont forget about env here
+						return prnt->script( code, _env, chunk_name, mode );
 					}
 				else { throw std::runtime_error( "Parent engine is not available" ); }
 			}
@@ -102,16 +99,19 @@ public:
 											  //! to avoid this break of encapsulation
 											  //! (check .lua_state() method in
 											  //! state_view) to create an env
-							sol::create,
-							_env
+							sol::create
 						};
+
 						for ( const auto& [ key, value ] : env )
 							{
-								tmp_env [ key ] = value;
+								if ( _env [ key ] == value ) { tmp_env [ key ] = value; }
 							}
 						return prnt->script( code, tmp_env, chunk_name, mode );
 					}
-				else { throw std::runtime_error( "Parent engine is not available" ); }
+				else
+					{
+						throw std::runtime_error( "Parent engine is not available" );
+					} // maybe return bad function result in future
 			}
 	}
 
@@ -136,11 +136,7 @@ public:
 				auto& [ _prnt_ptr, _env ]{ std::get< proxy_engine_data >( _data ) };
 				if ( auto prnt{ _prnt_ptr.lock() } )
 					{
-						return prnt->script( code,
-											 _env,
-											 on_error,
-											 chunk_name,
-											 mode ); //! dont forget about env here
+						return prnt->script( code, _env, on_error, chunk_name, mode );
 					}
 				else { throw std::runtime_error( "Parent engine is not available" ); }
 			}
@@ -169,10 +165,11 @@ public:
 				auto& [ _prnt_ptr, _env ]{ std::get< proxy_engine_data >( _data ) };
 				if ( auto prnt{ _prnt_ptr.lock() } )
 					{
-						sol::environment tmp_env{ _env.lua_state(), sol::create, _env };
+						sol::environment tmp_env{ _env.lua_state(), sol::create };
+
 						for ( const auto& [ key, value ] : env )
 							{
-								tmp_env [ key ] = value;
+								if ( _env [ key ] == value ) { tmp_env [ key ] = value; }
 							}
 						return prnt->script( code, tmp_env, on_error, chunk_name, mode );
 					}
@@ -219,10 +216,10 @@ public:
 				auto& [ _prnt_ptr, _env ]{ std::get< proxy_engine_data >( _data ) };
 				if ( auto prnt{ _prnt_ptr.lock() } )
 					{
-						sol::environment tmp_env{ _env.lua_state(), sol::create, _env };
+						sol::environment tmp_env{ _env.lua_state(), sol::create };
 						for ( const auto& [ key, value ] : env )
 							{
-								tmp_env [ key ] = value;
+								if ( _env [ key ] == value ) { tmp_env [ key ] = value; }
 							}
 						return prnt->script_file( filename, tmp_env, mode );
 					}
@@ -276,10 +273,10 @@ public:
 				auto& [ _prnt_ptr, _env ]{ std::get< proxy_engine_data >( _data ) };
 				if ( auto prnt{ _prnt_ptr.lock() } )
 					{
-						sol::environment tmp_env{ _env.lua_state(), sol::create, _env };
+						sol::environment tmp_env{ _env.lua_state(), sol::create };
 						for ( const auto& [ key, value ] : env )
 							{
-								tmp_env [ key ] = value;
+								if ( _env [ key ] == value ) { tmp_env [ key ] = value; }
 							}
 						return prnt->script_file( filename, tmp_env, on_error, mode );
 					}
@@ -304,9 +301,8 @@ public:
 				auto& [ _prnt_ptr, _env ]{ std::get< proxy_engine_data >( _data ) };
 				if ( auto prnt{ _prnt_ptr.lock() } )
 					{
-						
 						auto mod{ prnt->require( key, open_function, false ) };
-						if ( create_global == true ) _env [ key ] = mod;
+						if ( create_global == true ) { _env [ key ] = mod; }
 						return mod;
 					}
 				else { throw std::runtime_error( "Parent engine is not available" ); }
@@ -321,7 +317,6 @@ public:
 	{
 		if ( is_real() )
 			{
-				
 				return std::get< real_engine_data >( _data ).require_script(
 					key,
 					code,
@@ -333,7 +328,7 @@ public:
 				if ( auto prnt{ _prnt_ptr.lock() } )
 					{
 						auto mod{ prnt->require_script( key, code, false ) };
-						if ( create_global == true ) _env [ key ] = mod;
+						if ( create_global == true ) { _env [ key ] = mod; }
 						return mod;
 					}
 				else { throw std::runtime_error( "Parent engine is not available" ); }
@@ -359,7 +354,7 @@ public:
 				if ( auto prnt{ _prnt_ptr.lock() } )
 					{
 						auto mod{ prnt->require_script( key, file, false ) };
-						if ( create_global == true ) _env [ key ] = mod;
+						if ( create_global == true ) { _env [ key ] = mod; }
 						return mod;
 					}
 				else { throw std::runtime_error( "Parent engine is not available" ); }
@@ -438,10 +433,10 @@ public:
 				auto& [ _prnt_ptr, _env ]{ std::get< proxy_engine_data >( _data ) };
 				if ( auto prnt{ _prnt_ptr.lock() } )
 					{
-						sol::environment tmp_env{ _env.lua_state(), sol::create, _env };
+						sol::environment tmp_env{ _env.lua_state(), sol::create };
 						for ( const auto& [ key, value ] : env )
 							{
-								tmp_env [ key ] = value;
+								if ( _env [ key ] == value ) { tmp_env [ key ] = value; }
 							}
 						return prnt->do_string( code, tmp_env );
 					}
@@ -462,10 +457,10 @@ public:
 				auto& [ _prnt_ptr, _env ]{ std::get< proxy_engine_data >( _data ) };
 				if ( auto prnt{ _prnt_ptr.lock() } )
 					{
-						sol::environment tmp_env{ _env.lua_state(), sol::create, _env };
+						sol::environment tmp_env{ _env.lua_state(), sol::create };
 						for ( const auto& [ key, value ] : env )
 							{
-								tmp_env [ key ] = value;
+								if ( _env [ key ] == value ) { tmp_env [ key ] = value; }
 							}
 						return prnt->do_file( filename, tmp_env );
 					}
@@ -482,7 +477,11 @@ public:
 			{
 				auto& [ _prnt_ptr, _env ]{ std::get< proxy_engine_data >( _data ) };
 				if ( auto prnt{ _prnt_ptr.lock() } ) { return _env; }
-				else { throw std::runtime_error( "Parent engine is not available" ); }
+				else
+					{
+						throw std::runtime_error(
+							"Parent engine is not available, globals corrupted" );
+					}
 			}
 	}
 
@@ -650,6 +649,27 @@ public:
 				if ( auto prnt{ _prnt_ptr.lock() } )
 					{
 						return _env [ std::forward< T >( key ) ];
+					}
+				else { throw std::runtime_error( "Parent engine is not available" ); }
+			}
+	}
+
+	/////////////////////////////////////////////////////////////////////
+	template < typename Class, typename... Args >
+	sol::usertype< Class >
+	new_usertype( Args&&... args )
+	{
+		if ( is_real() )
+			{
+				return globals().new_usertype< Class >( std::forward< Args >( args )... );
+			}
+		else
+			{
+				auto& [ _prnt_ptr, _env ]{ std::get< proxy_engine_data >( _data ) };
+				if ( auto prnt{ _prnt_ptr.lock() } )
+					{
+						return _env.new_usertype< Class >(
+							std::forward< Args >( args )... );
 					}
 				else { throw std::runtime_error( "Parent engine is not available" ); }
 			}
