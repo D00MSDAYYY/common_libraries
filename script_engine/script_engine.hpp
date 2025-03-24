@@ -653,6 +653,23 @@ public:
 	// 			else { throw std::runtime_error( "Parent engine is not available" ); }
 	// 		}
 	// }
+	/////////////////////////////////////////////////////////////////////
+	template < typename T >
+	sol::table_proxy< sol::global_table&, sol::detail::proxy_key_t< T > >
+	operator[] ( T&& key )
+	{
+		auto glb = globals();
+		auto tmp = glb [ key ];
+		return std::move( tmp );
+	}
+
+	template < typename T >
+	sol::table_proxy< const sol::global_table&, sol::detail::proxy_key_t< T > >
+	operator[] ( T&& key ) const
+	{
+		std::cout << "booo" << std::endl;
+		return globals() [ std::forward< T >( key ) ];
+	}
 
 	/////////////////////////////////////////////////////////////////////
 	template < typename Class, typename... Args >
@@ -685,7 +702,8 @@ public:
 				auto& [ _prnt_ptr, _env ]{ std::get< proxy_engine_data >( _data ) };
 				if ( auto prnt{ _prnt_ptr.lock() } )
 					{
-						return prnt->lua_state(); // this breakes the encapsulation, but fixing this will take half of life
+						return prnt->lua_state(); // this breakes the encapsulation, but
+												  // fixing this will take half of life
 					}
 				else { throw std::runtime_error( "Parent engine is not available" ); }
 			}
