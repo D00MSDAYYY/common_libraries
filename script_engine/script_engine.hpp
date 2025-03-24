@@ -658,17 +658,22 @@ public:
 	sol::table_proxy< sol::global_table&, sol::detail::proxy_key_t< T > >
 	operator[] ( T&& key )
 	{
+		// DONT CHANGE HERE ANYTHING IT COULD CAUSE NASTY BUGS AND RUNTIME ERROR
 		auto glb = globals();
 		auto tmp = glb [ key ];
-		return std::move( tmp );
+		return tmp;
+		// DONT CHANGE HERE ANYTHING IT COULD CAUSE NASTY BUGS AND RUNTIME ERROR
 	}
 
 	template < typename T >
 	sol::table_proxy< const sol::global_table&, sol::detail::proxy_key_t< T > >
 	operator[] ( T&& key ) const
 	{
-		std::cout << "booo" << std::endl;
-		return globals() [ std::forward< T >( key ) ];
+		// DONT CHANGE HERE ANYTHING IT COULD CAUSE NASTY BUGS AND RUNTIME ERROR
+		auto glb = globals();
+		auto tmp = glb [ key ];
+		return tmp;
+		// DONT CHANGE HERE ANYTHING IT COULD CAUSE NASTY BUGS AND RUNTIME ERROR
 	}
 
 	/////////////////////////////////////////////////////////////////////
