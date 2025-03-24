@@ -613,25 +613,25 @@ public:
 	// 			  Value&&	 value,
 	// 			  Args&&... args );
 	/////////////////////////////////////////////////////////////////////
-	template < typename T >
-	sol::table_proxy< const sol::global_table&, sol::detail::proxy_key_t< T > >
-	operator[] ( T&& key ) const
-	{
-		if ( is_real() )
-			{
-				return std::get< real_engine_data >( _data )
-					.globals() [ std::forward< T >( key ) ];
-			}
-		else
-			{
-				auto& [ _prnt_ptr, _env ]{ std::get< proxy_engine_data >( _data ) };
-				if ( auto prnt{ _prnt_ptr.lock() } )
-					{
-						return _env [ std::forward< T >( key ) ];
-					}
-				else { throw std::runtime_error( "Parent engine is not available" ); }
-			}
-	}
+	// template < typename T >
+	// sol::table_proxy< const sol::global_table&, sol::detail::proxy_key_t< T > >
+	// operator[] ( T&& key ) const
+	// {
+	// 	if ( is_real() )
+	// 		{
+	// 			return std::get< real_engine_data >( _data )
+	// 				.globals() [ std::forward< T >( key ) ];
+	// 		}
+	// 	else
+	// 		{
+	// 			auto& [ _prnt_ptr, _env ]{ std::get< proxy_engine_data >( _data ) };
+	// 			if ( auto prnt{ _prnt_ptr.lock() } )
+	// 				{
+	// 					return _env [ std::forward< T >( key ) ];
+	// 				}
+	// 			else { throw std::runtime_error( "Parent engine is not available" ); }
+	// 		}
+	// }
 
 	/////////////////////////////////////////////////////////////////////
 	template < typename T >
