@@ -676,6 +676,22 @@ public:
 	}
 
 	/////////////////////////////////////////////////////////////////////
+	lua_State*
+	lua_state() const
+	{
+		if ( is_real() ) { return std::get< real_engine_data >( _data ).lua_state(); }
+		else
+			{
+				auto& [ _prnt_ptr, _env ]{ std::get< proxy_engine_data >( _data ) };
+				if ( auto prnt{ _prnt_ptr.lock() } )
+					{
+						return prnt->lua_state(); // this breakes the encapsulation, but fixing this will take half of life
+					}
+				else { throw std::runtime_error( "Parent engine is not available" ); }
+			}
+	}
+
+	/////////////////////////////////////////////////////////////////////
 	~engine() { };
 
 private:
