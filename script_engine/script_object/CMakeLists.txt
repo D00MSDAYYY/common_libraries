@@ -9,7 +9,7 @@ find_package(Lua REQUIRED)
 
 #################################################################################
 
-add_library(${PROJECT_NAME} INTERFACE)
+add_library(${PROJECT_NAME} STATIC)
 
 target_sources(${PROJECT_NAME} 
 PRIVATE
@@ -18,13 +18,13 @@ PRIVATE
 )
 
 target_include_directories(${PROJECT_NAME}
-INTERFACE
+PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}
 	${LUA_INCLUDE_DIR}
 )
 
 target_link_libraries(${PROJECT_NAME} 
-INTERFACE
+PUBLIC
 	${LUA_LIBRARIES}
 	script_engine
 

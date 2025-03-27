@@ -13,9 +13,9 @@ class object;
 class object
 {
 public:
-	object( const std::string& name, const engine::ptr& ngn )
+	object( const std::string& name, const engine::ptr& ngn_ptr )
 		: _name{ name }
-		, _ngn{ ngn }
+		, _ngn_ptr{ ngn_ptr }
 	{
 	}
 
@@ -28,7 +28,9 @@ protected:
 		= 0;
 	virtual void
 	self_unregister() const
-		= 0;
+		{
+			(*_ngn_ptr)[_name] = sol::lua_nil;
+		}
 
 private:
 	object( const object& obj ) = delete;
@@ -40,6 +42,6 @@ private:
 	/////////////////////////////////////////////////////////////////////
 
 	const std::string		  _name{};
-	const engine::ptr _ngn{};
+	const engine::ptr _ngn_ptr{};
 };
 } // namespace script
