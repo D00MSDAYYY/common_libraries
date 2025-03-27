@@ -13,9 +13,10 @@ class object;
 class object
 {
 public:
-	object( const std::string& name, const engine::ptr& ngn_ptr )
-		: _name{ name }
-		, _ngn_ptr{ ngn_ptr }
+	object( const engine::ptr& ngn_ptr = {},
+			const std::string& name	   = "MOTH_DEFAULT_NAME" )
+		: _ngn_ptr{ ngn_ptr }
+		, _name{ name }
 	{
 	}
 
@@ -26,22 +27,21 @@ protected:
 	virtual void
 	self_register() const
 		= 0;
+
 	virtual void
 	self_unregister() const
-		{
-			(*_ngn_ptr)[_name] = sol::lua_nil;
-		}
+	{
+		if ( _ngn_ptr ) ( *_ngn_ptr ) [ _name ] = sol::lua_nil;
+	}
+
+	std::vector< script::object* > _chldrn{};
+	const std::string			   _name{};
+	const engine::ptr			   _ngn_ptr{};
 
 private:
 	object( const object& obj ) = delete;
-
 	object&
 	operator= ( const object& obj )
 		= delete;
-
-	/////////////////////////////////////////////////////////////////////
-
-	const std::string		  _name{};
-	const engine::ptr _ngn_ptr{};
 };
 } // namespace script
