@@ -13,7 +13,7 @@ class object;
 class object
 {
 public:
-	object( const std::string& name, const engine::ptr ngn )
+	object( const std::string& name, const engine::ptr& ngn )
 		: _name{ name }
 		, _ngn{ ngn }
 	{
@@ -39,7 +39,7 @@ private:
 
 	/////////////////////////////////////////////////////////////////////
 
-	std::string		  _name{};
+	const std::string		  _name{};
 	const engine::ptr _ngn{};
 };
 } // namespace script

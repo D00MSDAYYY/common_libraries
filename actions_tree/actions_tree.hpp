@@ -39,7 +39,7 @@ struct node
 	// dependices
 
 	node( std::string name,
-		  tags_t		  tags							  = {},
+		  tags_t	  tags							  = {},
 		  std::vector< ch_node_ptr< TYPE > > children = {},
 		  p_node_ptr< TYPE > parent					  = {},
 		  std::string description					  = {},
