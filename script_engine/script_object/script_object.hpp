@@ -2,48 +2,44 @@
 #define SOL_ALL_SAFETIES_ON 1
 #include "script_engine.hpp"
 
+#include <memory>
 #include <sol/sol.hpp>
 
 namespace script
 {
 class engine;
+class object;
 
 class object
 {
 public:
 	object( const std::string& name, const engine::ptr ngn )
-		: _ngn{ ngn }
+		: _name{ name }
+		, _ngn{ ngn }
 	{
 	}
 
+	/////////////////////////////////////////////////////////////////////
 	virtual ~object() { }
 
+protected:
+	virtual void
+	self_register() const
+		= 0;
+	virtual void
+	self_unregister() const
+		= 0;
+
+private:
 	object( const object& obj ) = delete;
+
 	object&
 	operator= ( const object& obj )
 		= delete;
 
-protected:
-	virtual void
-	initialize() final
-	{
-		_self_register( _ngn );
-	};
+	/////////////////////////////////////////////////////////////////////
 
-	virtual void
-	uninialize() final
-	{
-		_self_unregister( _ngn );
-	};
-
-	virtual void
-	_self_register( const engine::ptr& _ngn ) const
-		= 0;
-	virtual void
-	_self_unregister( const engine::ptr& _ngn ) const
-		= 0;
-
-private:
-	const engine::ptr _ngn;
+	std::string		  _name{};
+	const engine::ptr _ngn{};
 };
 } // namespace script
