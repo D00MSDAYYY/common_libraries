@@ -36,6 +36,7 @@ protected:
 	}
 
 	const engine::ptr _ngn_ptr{};
+	const std::string _name{};
 
 private:
 	object( const object& obj ) = delete;
@@ -43,6 +44,6 @@ private:
 	operator= ( const object& obj )
 		= delete;
 
-	const std::string _name{};
+
 };
 } // namespace script
