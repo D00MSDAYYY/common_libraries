@@ -26,7 +26,9 @@ public:
 protected:
 	virtual void
 	self_register() const
-		= 0;
+	{
+		if ( _ngn_ptr ) ( *_ngn_ptr ) [ _name ] = this; // can throw
+	}
 
 	virtual void
 	self_unregister() const
@@ -34,14 +36,14 @@ protected:
 		if ( _ngn_ptr ) ( *_ngn_ptr ) [ _name ] = sol::lua_nil;
 	}
 
-	std::vector< script::object* > _chldrn{};
-	const std::string			   _name{};
-	const engine::ptr			   _ngn_ptr{};
+	const engine::ptr _ngn_ptr{};
 
 private:
 	object( const object& obj ) = delete;
 	object&
 	operator= ( const object& obj )
 		= delete;
+
+	const std::string _name{};
 };
 } // namespace script
