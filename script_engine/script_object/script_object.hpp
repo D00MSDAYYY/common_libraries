@@ -29,7 +29,7 @@ protected:
 			{
 				_ngn_ptr->globals() [ _name ] = this;
 				_ngn_ptr->script( "if (print) then print('" + _name
-								  + " registered') end " );
+								  + " [registered]') end " );
 			}
 	}
 
@@ -40,7 +40,7 @@ protected:
 			{
 				_ngn_ptr->globals() [ _name ] = sol::lua_nil;
 				_ngn_ptr->script( "if (print) then print('" + _name
-								  + " unregistered') end" );
+								  + " [unregistered]') end" );
 			}
 	}
 
