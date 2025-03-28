@@ -24,15 +24,23 @@ public:
 
 protected:
 	virtual void
-	self_register() const
+	self_register() const // can throw if name already exist
 	{
-		if ( _ngn_ptr ) ( *_ngn_ptr ) [ _name ] = this; // can throw if name already exist
+		if ( _ngn_ptr )
+			{
+				( *_ngn_ptr ) [ _name ] = this;
+				_ngn_ptr->script("if (print) do print('" +_name + " registered')");
+			} 
 	}
 
 	virtual void
 	self_unregister() const
 	{
-		if ( _ngn_ptr ) ( *_ngn_ptr ) [ _name ] = sol::lua_nil;
+		if ( _ngn_ptr )
+			{
+				( *_ngn_ptr ) [ _name ] = this;
+				_ngn_ptr->script( "if (print) do print('" + _name + " unregistered')" );
+			}
 	}
 
 	const engine::ptr _ngn_ptr{};
