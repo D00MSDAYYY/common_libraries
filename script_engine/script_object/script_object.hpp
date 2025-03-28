@@ -19,8 +19,7 @@ public:
 	{
 	}
 
-	/////////////////////////////////////////////////////////////////////
-	virtual ~object() { }
+	virtual ~object() { object::self_unregister(); }
 
 protected:
 	virtual void
