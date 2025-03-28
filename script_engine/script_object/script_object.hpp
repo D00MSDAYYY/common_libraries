@@ -36,6 +36,7 @@ protected:
 	virtual void
 	self_unregister() const
 	{
+		std::cout << "in self_unregister() of " << _name << std::endl;
 		if ( _ngn_ptr )
 			{
 				_ngn_ptr->globals() [ _name ] = sol::lua_nil;

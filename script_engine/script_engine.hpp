@@ -6,7 +6,6 @@
 
 namespace script
 {
-/////////////////////////////////////////////////////////////////////
 class engine final : public std::enable_shared_from_this< engine >
 {
 public:

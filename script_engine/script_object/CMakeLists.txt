@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.31.5)
 project(script_object)
 
-
 ########################### find packages here ##################################
 find_package(Lua REQUIRED)
 
