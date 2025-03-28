@@ -601,29 +601,6 @@ public:
 	}
 
 	/////////////////////////////////////////////////////////////////////
-	template < typename T >
-	sol::table_proxy< sol::global_table&, sol::detail::proxy_key_t< T > >
-	operator[] ( T&& key )
-	{
-		// DONT CHANGE HERE ANYTHING IT COULD CAUSE NASTY BUGS AND RUNTIME ERROR
-		auto glb = globals();
-		auto tmp = glb [ key ];
-		return tmp;
-		// DONT CHANGE HERE ANYTHING IT COULD CAUSE NASTY BUGS AND RUNTIME ERROR
-	}
-
-	template < typename T >
-	sol::table_proxy< const sol::global_table&, sol::detail::proxy_key_t< T > >
-	operator[] ( T&& key ) const
-	{
-		// DONT CHANGE HERE ANYTHING IT COULD CAUSE NASTY BUGS AND RUNTIME ERROR
-		auto glb = globals();
-		auto tmp = glb [ key ];
-		return tmp;
-		// DONT CHANGE HERE ANYTHING IT COULD CAUSE NASTY BUGS AND RUNTIME ERROR
-	}
-
-	/////////////////////////////////////////////////////////////////////
 	template < typename Class, typename... Args >
 	sol::usertype< Class >
 	new_usertype( Args&&... args )
