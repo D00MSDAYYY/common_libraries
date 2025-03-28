@@ -13,7 +13,7 @@ class object;
 class object
 {
 public:
-	object( const std::string& name,const engine::ptr& ngn_ptr  )
+	object( const std::string& name, const engine::ptr& ngn_ptr )
 		: _ngn_ptr{ ngn_ptr }
 		, _name{ name }
 	{
@@ -28,9 +28,9 @@ protected:
 	{
 		if ( _ngn_ptr )
 			{
-				( *_ngn_ptr ) [ _name ] = this;
-				_ngn_ptr->script("if (print) do print('" +_name + " registered')");
-			} 
+				_ngn_ptr->globals() [ _name ] = this;
+				_ngn_ptr->script( "if (print) do print('" + _name + " registered')" );
+			}
 	}
 
 	virtual void
@@ -38,7 +38,7 @@ protected:
 	{
 		if ( _ngn_ptr )
 			{
-				( *_ngn_ptr ) [ _name ] = this;
+				_ngn_ptr->globals() [ _name ] = sol::lua_nil;
 				_ngn_ptr->script( "if (print) do print('" + _name + " unregistered')" );
 			}
 	}
@@ -51,7 +51,5 @@ private:
 	object&
 	operator= ( const object& obj )
 		= delete;
-
-
 };
 } // namespace script
