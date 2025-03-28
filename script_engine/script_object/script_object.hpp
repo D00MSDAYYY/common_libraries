@@ -23,14 +23,27 @@ public:
 
 protected:
 	virtual void
-	self_register() const // can throw if name already exist
+	self_register(script::object* ptr) const // can throw if name already exist
 	{
-		if ( _ngn_ptr )
-			{
-				_ngn_ptr->globals() [ _name ] = this;
-				_ngn_ptr->script( "if (print) then print('" + _name
-								  + " registered') end " );
-			}
+		if (ptr)
+		{
+			if ( _ngn_ptr )
+				{
+					if ( _ngn_ptr->globals() [ _name ] = sol::lua_nil )
+						{
+							_ngn_ptr->globals() [ _name ] = this;
+							_ngn_ptr->script( "if (print) then print('" + _name
+											  + " registered') end " );
+						}
+					else
+						{
+							std::runtime_error( "Script object with the name '" + _name
+												+ "' is already registered in engine" );
+						}
+				}
+			else { throw std::runtime_error( "Parent engine is not available" ); }
+		}
+		else { throw std::runtime_error( "Nullptr passed to script::object::self_register" ); }
 	}
 
 	virtual void
