@@ -13,8 +13,7 @@ class object;
 class object
 {
 public:
-	object( const engine::ptr& ngn_ptr = {},
-			const std::string& name	   = "MOTH_DEFAULT_NAME" )
+	object( const std::string& name,const engine::ptr& ngn_ptr  )
 		: _ngn_ptr{ ngn_ptr }
 		, _name{ name }
 	{
@@ -27,7 +26,7 @@ protected:
 	virtual void
 	self_register() const
 	{
-		if ( _ngn_ptr ) ( *_ngn_ptr ) [ _name ] = this; // can throw
+		if ( _ngn_ptr ) ( *_ngn_ptr ) [ _name ] = this; // can throw if name already exist
 	}
 
 	virtual void
