@@ -19,7 +19,7 @@ public:
 
 	/////////////////////////////////////////////////////////////////////
 	static ptr
-	make_proxy_engine( std::weak_ptr< engine > parent, sol::environment env )
+	make_proxy_engine( std::shared_ptr< engine > parent, sol::environment env )
 	{
 		return std::shared_ptr< engine >( new engine{ parent, env } );
 	}
@@ -66,7 +66,7 @@ public:
 		else
 			{
 				auto& [ _prnt_ptr, _env ]{ std::get< proxy_engine_data >( _data ) };
-				if ( auto prnt{ _prnt_ptr.lock() } )
+				if ( auto prnt{ _prnt_ptr } )
 					{
 						return prnt->script( code, _env, chunk_name, mode );
 					}
@@ -91,7 +91,7 @@ public:
 		else
 			{
 				auto& [ _prnt_ptr, _env ]{ std::get< proxy_engine_data >( _data ) };
-				if ( auto prnt{ _prnt_ptr.lock() } )
+				if ( auto prnt{ _prnt_ptr } )
 					{
 						sol::environment tmp_env{
 							_env.lua_state(), //! very bad workaround, but there is no way
@@ -133,7 +133,7 @@ public:
 		else
 			{
 				auto& [ _prnt_ptr, _env ]{ std::get< proxy_engine_data >( _data ) };
-				if ( auto prnt{ _prnt_ptr.lock() } )
+				if ( auto prnt{ _prnt_ptr } )
 					{
 						return prnt->script( code, _env, on_error, chunk_name, mode );
 					}
@@ -162,7 +162,7 @@ public:
 		else
 			{
 				auto& [ _prnt_ptr, _env ]{ std::get< proxy_engine_data >( _data ) };
-				if ( auto prnt{ _prnt_ptr.lock() } )
+				if ( auto prnt{ _prnt_ptr } )
 					{
 						sol::environment tmp_env{ _env.lua_state(), sol::create };
 
@@ -188,7 +188,7 @@ public:
 		else
 			{
 				auto& [ _prnt_ptr, _env ]{ std::get< proxy_engine_data >( _data ) };
-				if ( auto prnt{ _prnt_ptr.lock() } )
+				if ( auto prnt{ _prnt_ptr } )
 					{
 						return prnt->script_file( filename,
 												  _env,
@@ -213,7 +213,7 @@ public:
 		else
 			{
 				auto& [ _prnt_ptr, _env ]{ std::get< proxy_engine_data >( _data ) };
-				if ( auto prnt{ _prnt_ptr.lock() } )
+				if ( auto prnt{ _prnt_ptr } )
 					{
 						sol::environment tmp_env{ _env.lua_state(), sol::create };
 						for ( const auto& [ key, value ] : env )
@@ -243,7 +243,7 @@ public:
 		else
 			{
 				auto& [ _prnt_ptr, _env ]{ std::get< proxy_engine_data >( _data ) };
-				if ( auto prnt{ _prnt_ptr.lock() } )
+				if ( auto prnt{ _prnt_ptr } )
 					{
 						return prnt->script_file( filename, _env, on_error, mode );
 					}
@@ -270,7 +270,7 @@ public:
 		else
 			{
 				auto& [ _prnt_ptr, _env ]{ std::get< proxy_engine_data >( _data ) };
-				if ( auto prnt{ _prnt_ptr.lock() } )
+				if ( auto prnt{ _prnt_ptr } )
 					{
 						sol::environment tmp_env{ _env.lua_state(), sol::create };
 						for ( const auto& [ key, value ] : env )
@@ -298,7 +298,7 @@ public:
 		else
 			{
 				auto& [ _prnt_ptr, _env ]{ std::get< proxy_engine_data >( _data ) };
-				if ( auto prnt{ _prnt_ptr.lock() } )
+				if ( auto prnt{ _prnt_ptr } )
 					{
 						auto mod{ prnt->require( key, open_function, false ) };
 						if ( create_global == true ) { _env [ key ] = mod; }
@@ -324,7 +324,7 @@ public:
 		else
 			{
 				auto& [ _prnt_ptr, _env ]{ std::get< proxy_engine_data >( _data ) };
-				if ( auto prnt{ _prnt_ptr.lock() } )
+				if ( auto prnt{ _prnt_ptr } )
 					{
 						auto mod{ prnt->require_script( key, code, false ) };
 						if ( create_global == true ) { _env [ key ] = mod; }
@@ -350,7 +350,7 @@ public:
 		else
 			{
 				auto& [ _prnt_ptr, _env ]{ std::get< proxy_engine_data >( _data ) };
-				if ( auto prnt{ _prnt_ptr.lock() } )
+				if ( auto prnt{ _prnt_ptr } )
 					{
 						auto mod{ prnt->require_script( key, file, false ) };
 						if ( create_global == true ) { _env [ key ] = mod; }
@@ -392,10 +392,7 @@ public:
 		else
 			{
 				auto& [ _prnt_ptr, _env ]{ std::get< proxy_engine_data >( _data ) };
-				if ( auto prnt{ _prnt_ptr.lock() } )
-					{
-						return prnt->do_string( code, _env );
-					}
+				if ( auto prnt{ _prnt_ptr } ) { return prnt->do_string( code, _env ); }
 				else { throw std::runtime_error( "Parent engine is not available" ); }
 			}
 	}
@@ -411,10 +408,7 @@ public:
 		else
 			{
 				auto& [ _prnt_ptr, _env ]{ std::get< proxy_engine_data >( _data ) };
-				if ( auto prnt{ _prnt_ptr.lock() } )
-					{
-						return prnt->do_file( filename, _env );
-					}
+				if ( auto prnt{ _prnt_ptr } ) { return prnt->do_file( filename, _env ); }
 				else { throw std::runtime_error( "Parent engine is not available" ); }
 			}
 	}
@@ -430,7 +424,7 @@ public:
 		else
 			{
 				auto& [ _prnt_ptr, _env ]{ std::get< proxy_engine_data >( _data ) };
-				if ( auto prnt{ _prnt_ptr.lock() } )
+				if ( auto prnt{ _prnt_ptr } )
 					{
 						sol::environment tmp_env{ _env.lua_state(), sol::create };
 						for ( const auto& [ key, value ] : env )
@@ -454,7 +448,7 @@ public:
 		else
 			{
 				auto& [ _prnt_ptr, _env ]{ std::get< proxy_engine_data >( _data ) };
-				if ( auto prnt{ _prnt_ptr.lock() } )
+				if ( auto prnt{ _prnt_ptr } )
 					{
 						sol::environment tmp_env{ _env.lua_state(), sol::create };
 						for ( const auto& [ key, value ] : env )
@@ -475,7 +469,7 @@ public:
 		else
 			{
 				auto& [ _prnt_ptr, _env ]{ std::get< proxy_engine_data >( _data ) };
-				if ( auto prnt{ _prnt_ptr.lock() } ) { return prnt->globals(); }
+				if ( auto prnt{ _prnt_ptr } ) { return prnt->globals(); }
 				else
 					{
 						throw std::runtime_error(
@@ -511,7 +505,7 @@ public:
 		else
 			{
 				auto& [ _prnt_ptr, _env ]{ std::get< proxy_engine_data >( _data ) };
-				if ( auto prnt{ _prnt_ptr.lock() } ) { return prnt->memory_used(); }
+				if ( auto prnt{ _prnt_ptr } ) { return prnt->memory_used(); }
 				else { throw std::runtime_error( "Parent engine is not available" ); }
 			}
 	}
@@ -524,7 +518,7 @@ public:
 		else
 			{
 				auto& [ _prnt_ptr, _env ]{ std::get< proxy_engine_data >( _data ) };
-				if ( auto prnt{ _prnt_ptr.lock() } ) { return prnt->collect_garbage(); }
+				if ( auto prnt{ _prnt_ptr } ) { return prnt->collect_garbage(); }
 				else { throw std::runtime_error( "Parent engine is not available" ); }
 			}
 	}
@@ -540,7 +534,7 @@ public:
 		else
 			{
 				auto& [ _prnt_ptr, _env ]{ std::get< proxy_engine_data >( _data ) };
-				if ( auto prnt{ _prnt_ptr.lock() } )
+				if ( auto prnt{ _prnt_ptr } )
 					{
 						auto new_table{ prnt->create_table( narr, nrec ) };
 						_env [ new_table ] = new_table;
@@ -565,7 +559,7 @@ public:
 		else
 			{
 				auto& [ _prnt_ptr, _env ]{ std::get< proxy_engine_data >( _data ) };
-				if ( auto prnt{ _prnt_ptr.lock() } )
+				if ( auto prnt{ _prnt_ptr } )
 					{
 						auto new_table{
 							prnt->create_table( narr, nrec, key, value, args... )
@@ -589,7 +583,7 @@ public:
 		else
 			{
 				auto& [ _prnt_ptr, _env ]{ std::get< proxy_engine_data >( _data ) };
-				if ( auto prnt{ _prnt_ptr.lock() } )
+				if ( auto prnt{ _prnt_ptr } )
 					{
 						auto new_table{ prnt->create_table_with( args... ) };
 						_env [ new_table ] = new_table;
@@ -611,7 +605,7 @@ public:
 		else
 			{
 				auto& [ _prnt_ptr, _env ]{ std::get< proxy_engine_data >( _data ) };
-				if ( auto prnt{ _prnt_ptr.lock() } )
+				if ( auto prnt{ _prnt_ptr } )
 					{
 						return _env.new_usertype< Class >(
 							std::forward< Args >( args )... );
@@ -628,7 +622,7 @@ public:
 		else
 			{
 				auto& [ _prnt_ptr, _env ]{ std::get< proxy_engine_data >( _data ) };
-				if ( auto prnt{ _prnt_ptr.lock() } )
+				if ( auto prnt{ _prnt_ptr } )
 					{
 						return prnt->lua_state(); // this breakes the encapsulation, but
 												  // fixing this will take half of life
@@ -638,12 +632,16 @@ public:
 	}
 
 	/////////////////////////////////////////////////////////////////////
-	~engine() { };
+	~engine()
+	{
+		std::cout << "in\t " << ( is_real() ? "real" : "proxy" )
+				  << " engine \tdesctructor" << std::endl;
+	};
 
 private:
 	engine()
 		: _data{ real_engine_data{} } { };
-	engine( std::weak_ptr< engine > parent, sol::environment env )
+	engine( std::shared_ptr< engine > parent, sol::environment env )
 		: _data{
 			proxy_engine_data{ parent, env }
 	} { };
@@ -652,7 +650,7 @@ private:
 	operator= ( const engine& se )
 		= delete;
 	/////////////////////////////////////////////////////////////////////
-	using proxy_engine_data = std::pair< std::weak_ptr< engine >, sol::environment >;
+	using proxy_engine_data = std::pair< std::shared_ptr< engine >, sol::environment >;
 	using real_engine_data	= sol::state;
 	std::variant< real_engine_data, proxy_engine_data > _data{};
 };

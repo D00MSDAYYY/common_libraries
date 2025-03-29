@@ -19,15 +19,20 @@ public:
 	{
 	}
 
-	virtual ~object() { object::self_unregister(); }
+	virtual ~object()
+	{
+		std::cout << "in\t" << _name << "\t destructor" << std::endl;
+		std::cout << "use count of " << _ngn_ptr->lua_state()
+				  << " engine : " << _ngn_ptr.use_count() << std::endl;
+		object::self_unregister();
+	}
 
 protected:
 	template < typename T >
 	void
-	self_register( T* ptr ) 
+	self_register( T* ptr )
 	{
 		auto is_ok{ static_cast< script::object* >( ptr ) };
-
 		if ( is_ok )
 			{
 				if ( _ngn_ptr )
@@ -56,11 +61,11 @@ protected:
 	}
 
 	virtual void
-	self_register()  // can throw if name already exist
+	self_register() // can throw if name already exist
 		= 0;
 
 	virtual void
-	self_unregister() 
+	self_unregister()
 	{
 		if ( _ngn_ptr )
 			{
