@@ -3,6 +3,7 @@
 #include "script_engine.hpp"
 
 #include <memory>
+#include <optional>
 #include <sol/sol.hpp>
 
 namespace script
@@ -13,9 +14,12 @@ class object;
 class object
 {
 public:
-	object( const std::string& name, const engine::ptr& ngn_ptr )
+	object( const std::string&			name,
+			const engine::ptr&			ngn_ptr,
+			std::optional< sol::table > prnt_tbl = std::nullopt )
 		: _ngn_ptr{ ngn_ptr }
 		, _name{ name }
+		, _prnt_tbl{ prnt_tbl }
 	{
 	}
 
@@ -32,32 +36,34 @@ protected:
 	void
 	self_register( T* ptr )
 	{
-		auto is_ok{ static_cast< script::object* >( ptr ) };
-		if ( is_ok )
-			{
-				if ( _ngn_ptr )
-					{
-						if ( _ngn_ptr->globals() [ _name ] == sol::lua_nil )
-							{
-								_ngn_ptr->globals() [ _name ] = this;
-								_ngn_ptr->script( "if (print) then print('" + _name
-												  + " registered') end " );
-							}
-						else
-							{
-								std::runtime_error(
-									"Script object with the name '" + _name
-									+ "' is already registered in engine" );
-							}
-					}
-				else { throw std::runtime_error( "Parent engine is not available" ); }
-			}
-		else
+		script::object* obj_ptr = dynamic_cast< script::object* >( ptr );
+		if ( !obj_ptr )
 			{
 				throw std::runtime_error(
-					"Passed pointer to a function script::object::self_register(T* ptr) "
-					"can't be onverted to a base class pointer" );
+					"Passed pointer cannot be converted to script::object pointer" );
 			}
+
+		if ( !_ngn_ptr ) { throw std::runtime_error( "Parent engine is not available" ); }
+
+		if ( _name.empty() )
+			{
+				throw std::runtime_error( "Object name cannot be empty" );
+			}
+
+		sol::table target_table = _prnt_tbl.value_or( _ngn_ptr->globals() );
+
+		if ( target_table [ _name ] != sol::lua_nil )
+			{
+				throw std::runtime_error(
+					"script::object with name '" + _name + "' is already registered in "
+					+ ( _prnt_tbl ? "parent table" : "global namespace" ) );
+			}
+
+		target_table [ _name ] = this;
+
+		_ngn_ptr->script( "if print then print('["
+						  + std::string( _prnt_tbl ? "table" : "global" )
+						  + " registration] " + _name + "') end" );
 	}
 
 	virtual void
@@ -75,8 +81,10 @@ protected:
 			}
 	}
 
-	const engine::ptr _ngn_ptr{};
-	const std::string _name{};
+	const engine::ptr				  _ngn_ptr{};
+	const std::string				  _name{};
+	// const sol::table				  _slf_tbl{};
+	const std::optional< sol::table > _prnt_tbl{};
 
 private:
 	object( const object& obj ) = delete;
