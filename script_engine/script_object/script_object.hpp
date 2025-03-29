@@ -36,8 +36,8 @@ protected:
 	void
 	self_register( T* ptr )
 	{
-		script::object* obj_ptr = dynamic_cast< script::object* >( ptr );
-		if ( !obj_ptr )
+		auto is_ok = dynamic_cast< script::object* >( ptr );
+		if ( !is_ok )
 			{
 				throw std::runtime_error(
 					"Passed pointer cannot be converted to script::object pointer" );
@@ -59,7 +59,7 @@ protected:
 					+ ( _prnt_tbl ? "parent table" : "global namespace" ) );
 			}
 
-		target_table [ _name ] = this;
+		target_table [ _name ] = ptr;
 
 		_ngn_ptr->script( "if print then print('["
 						  + std::string( _prnt_tbl ? "table" : "global" )
