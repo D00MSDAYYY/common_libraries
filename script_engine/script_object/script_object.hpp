@@ -31,6 +31,8 @@ public:
 		object::self_unregister();
 	}
 
+	const std::string _name{};
+
 protected:
 	template < typename T >
 	void
@@ -50,16 +52,15 @@ protected:
 				throw std::runtime_error( "Object name cannot be empty" );
 			}
 
-		sol::table target_table = _prnt_tbl.value_or( _ngn_ptr->globals() );
 
-		if ( target_table [ _name ] != sol::lua_nil )
+		if ( _ngn_ptr->globals() [ _name ] != sol::lua_nil )
 			{
 				throw std::runtime_error(
-					"script::object with name '" + _name + "' is already registered in "
-					+ ( _prnt_tbl ? "parent table" : "global namespace" ) );
+					"script::object with name '" + _name
+					+ "' is already registered in global namespace (this environment)" );
 			}
 
-		target_table [ _name ] = ptr;
+		_ngn_ptr->globals() [ _name ] = ptr;
 
 		_ngn_ptr->script( "if print then print('["
 						  + std::string( _prnt_tbl ? "table" : "global" )
@@ -82,7 +83,7 @@ protected:
 	}
 
 	const engine::ptr				  _ngn_ptr{};
-	const std::string				  _name{};
+
 	// const sol::table				  _slf_tbl{};
 	const std::optional< sol::table > _prnt_tbl{};
 
