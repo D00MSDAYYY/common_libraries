@@ -24,7 +24,7 @@ public:
 protected:
 	template < typename T >
 	void
-	self_register( T* ptr )
+	self_register( T* ptr ) 
 	{
 		auto is_ok{ static_cast< script::object* >( ptr ) };
 
@@ -56,11 +56,11 @@ protected:
 	}
 
 	virtual void
-	self_register() const // can throw if name already exist
+	self_register()  // can throw if name already exist
 		= 0;
 
 	virtual void
-	self_unregister() const
+	self_unregister() 
 	{
 		if ( _ngn_ptr )
 			{
