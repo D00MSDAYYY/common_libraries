@@ -39,7 +39,7 @@ protected:
 
 	virtual void
 	self_unregister()
-		{};
+		= 0;
 
 	const engine::ptr				  _ngn_ptr{};
 
