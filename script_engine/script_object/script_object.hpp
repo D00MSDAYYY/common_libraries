@@ -19,7 +19,6 @@ public:
 			std::optional< sol::table > prnt_tbl = std::nullopt )
 		: _ngn_ptr{ ngn_ptr }
 		, _name{ name }
-		, _prnt_tbl{ prnt_tbl }
 	{
 	}
 
@@ -34,8 +33,13 @@ public:
 	const std::string _name{};
 
 protected:
+	virtual const std::string
+	class_name() // this func neaded to force users (programmers) to provide a class name
+				 // which will be used in template self_register
+		= 0;
+
 	template < typename T >
-	void
+	static void
 	self_register( T* ptr )
 	{
 		auto is_ok = dynamic_cast< script::object* >( ptr );
@@ -45,26 +49,31 @@ protected:
 					"Passed pointer cannot be converted to script::object pointer" );
 			}
 
-		if ( !_ngn_ptr ) { throw std::runtime_error( "Parent engine is not available" ); }
+		const auto ngn_ptr{ ptr->_ngn_ptr };
+		if ( !ngn_ptr ) { throw std::runtime_error( "Parent engine is not available" ); }
 
-		if ( _name.empty() )
+		const auto name{ ptr->_name };
+		if ( name.empty() ) { throw std::runtime_error( "Object name cannot be empty" ); }
+
+		const auto class_name{ ptr->class_name() };
+		if ( class_name.empty() )
 			{
 				throw std::runtime_error( "Object name cannot be empty" );
 			}
-
-
-		if ( _ngn_ptr->globals() [ _name ] != sol::lua_nil )
+		if ( ngn_ptr->globals() [ class_name ] != sol::lua_nil ) 
 			{
-				throw std::runtime_error(
-					"script::object with name '" + _name
-					+ "' is already registered in global namespace (this environment)" );
+				throw std::runtime_error( "class with name '" + class_name
+										  + "' is already registered in global namespace "
+											"(current environment)" );
 			}
 
-		_ngn_ptr->globals() [ _name ] = ptr;
+		// if ( ngn_ptr->globals() [ name ] != sol::lua_nil ) // TODO i don't is this ok check or not
+		// 	{
+		// 		throw std::runtime_error( "script::object with name '" + name
+		// 								  + "' is already registered in global namespace "
+		// 									"(current environment)" );
+		// 	}
 
-		_ngn_ptr->script( "if print then print('["
-						  + std::string( _prnt_tbl ? "table" : "global" )
-						  + " registration] " + _name + "') end" );
 	}
 
 	virtual void
@@ -82,10 +91,10 @@ protected:
 			}
 	}
 
-	const engine::ptr				  _ngn_ptr{};
+	const engine::ptr _ngn_ptr{};
 
 	// const sol::table				  _slf_tbl{};
-	const std::optional< sol::table > _prnt_tbl{};
+	// const std::optional< sol::table > _prnt_tbl{};
 
 private:
 	object( const object& obj ) = delete;
