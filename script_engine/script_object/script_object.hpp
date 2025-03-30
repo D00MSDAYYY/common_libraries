@@ -14,9 +14,7 @@ class object;
 class object
 {
 public:
-	object( const std::string&			name,
-			const engine::ptr&			ngn_ptr,
-			std::optional< sol::table > prnt_tbl = std::nullopt )
+	object( const std::string& name, const engine::ptr& ngn_ptr )
 		: _ngn_ptr{ ngn_ptr }
 		, _name{ name }
 	{
@@ -32,14 +30,14 @@ public:
 
 	const std::string _name{};
 
-protected:
 	virtual const std::string
 	class_name() // this func neaded to force users (programmers) to provide a class name
 				 // which will be used in template self_register
 		= 0;
 
+protected:
 	template < typename T >
-	static void
+	 void
 	self_register( T* ptr )
 	{
 		auto is_ok = dynamic_cast< script::object* >( ptr );
@@ -60,20 +58,20 @@ protected:
 			{
 				throw std::runtime_error( "Object name cannot be empty" );
 			}
-		if ( ngn_ptr->globals() [ class_name ] != sol::lua_nil ) 
+		if ( ngn_ptr->globals() [ class_name ] != sol::lua_nil )
 			{
 				throw std::runtime_error( "class with name '" + class_name
 										  + "' is already registered in global namespace "
 											"(current environment)" );
 			}
 
-		// if ( ngn_ptr->globals() [ name ] != sol::lua_nil ) // TODO i don't is this ok check or not
+		// if ( ngn_ptr->globals() [ name ] != sol::lua_nil ) // TODO i don't is this ok
+		// check or not
 		// 	{
 		// 		throw std::runtime_error( "script::object with name '" + name
 		// 								  + "' is already registered in global namespace "
 		// 									"(current environment)" );
 		// 	}
-
 	}
 
 	virtual void
