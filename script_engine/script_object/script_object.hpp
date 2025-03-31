@@ -31,13 +31,18 @@ public:
 	const std::string _name{};
 
 	virtual const std::string
-	class_name() // this func neaded to force users (programmers) to provide a class name
-				 // which will be used in template self_register
-		= 0;
+	class_name()
+	{
+		return "";
+	} // this func neaded to force users (programmers) to provide a class name which will
+	  // be used in template<...> self_register(...).
+	  // UPDATE: change pure virtual (=0) to default 'no value' return ({}) coz sometimes
+	  // some objects will register themself, just use ngn
+
 
 protected:
 	template < typename T >
-	 void
+	void
 	self_register( T* ptr )
 	{
 		auto is_ok = dynamic_cast< script::object* >( ptr );

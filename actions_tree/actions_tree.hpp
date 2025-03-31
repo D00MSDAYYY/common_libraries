@@ -21,16 +21,6 @@ using ch_node_ptr = std::shared_ptr< node< TYPE > >;
 template < typename TYPE >
 using p_node_ptr = std::weak_ptr< node< TYPE > >;
 
-template < typename TYPE >
-struct node_args
-{
-	const std::string				   name;
-	tags_t							   tags		   = {};
-	std::vector< ch_node_ptr< TYPE > > children	   = {};
-	p_node_ptr< TYPE >				   parent	   = {};
-	std::string						   description = {};
-	TYPE							   data		   = {};
-};
 
 template < typename TYPE >
 struct node
@@ -49,15 +39,6 @@ struct node
 		, _parent{ parent }
 		, _children{ children }
 		, _description{ description }
-	{
-	}
-
-	node( node_args< TYPE > args )
-		: node( std::move( args.name ),
-				std::move( args.tags ),
-				std::move( args.children ),
-				std::move( args.parent ),
-				std::move( args.description ) )
 	{
 	}
 
