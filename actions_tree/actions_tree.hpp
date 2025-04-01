@@ -16,11 +16,14 @@ template < typename >
 class node;
 
 template < typename TYPE >
-using ch_node_ptr = std::shared_ptr< node< TYPE > >;
-
-template < typename TYPE >
-using p_node_ptr = std::weak_ptr< node< TYPE > >;
-
+struct node_args
+{
+	const std::string			name;
+	tags_t						tags		= {};
+	std::string					description = {};
+	TYPE						data		= {};
+	std::vector< node< TYPE > > children	= {};
+};
 
 template < typename TYPE >
 struct node
@@ -29,24 +32,32 @@ struct node
 	// dependices
 
 	node( std::string name,
-		  tags_t	  tags							  = {},
-		  std::vector< ch_node_ptr< TYPE > > children = {},
-		  p_node_ptr< TYPE > parent					  = {},
-		  std::string description					  = {},
-		  TYPE data									  = {} )
+		  tags_t	  tags					   = {},
+		  std::string description			   = {},
+		  TYPE data							   = {},
+		  std::vector< node< TYPE > > children = {} )
 		: _name{ name }
 		, _tags{ tags }
-		, _parent{ parent }
-		, _children{ children }
 		, _description{ description }
+		, _data{ data }
+		, _children{ children }
 	{
 	}
 
-	const std::string				   _name;
-	tags_t							   _tags;
-	p_node_ptr< TYPE >				   _parent;
-	std::vector< ch_node_ptr< TYPE > > _children;
-	std::string						   _description;
+	node( node_args< TYPE > args )
+		: node( std::move( args.name ),
+				std::move( args.tags ),
+				std::move( args.description ),
+				std::move( args.data ),
+				std::move( args.children ) )
+	{
+	}
+
+	const std::string			_name;
+	tags_t						_tags;
+	std::string					_description;
+	TYPE						_data;
+	std::vector< node< TYPE > > _children;
 };
 
 } // namespace actions_tree
