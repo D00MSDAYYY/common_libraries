@@ -16,26 +16,37 @@ template < typename >
 class node;
 
 template < typename TYPE >
+using ch_node_ptr = std::shared_ptr< node< TYPE > >;
+
+template < typename TYPE >
+using p_node_ptr = std::weak_ptr< node< TYPE > >;
+
+
+template < typename TYPE >
 struct node
 {
+	// TODO! add methods  add_child, add_tag for checking for duplications and circular
+	// dependices
+
 	node( std::string name,
-		  tags_t	  tags					   = {},
-		  std::string description			   = {},
-		  TYPE data							   = {},
-		  std::vector< node< TYPE > > children = {} )
+		  tags_t	  tags							  = {},
+		  std::vector< ch_node_ptr< TYPE > > children = {},
+		  p_node_ptr< TYPE > parent					  = {},
+		  std::string description					  = {},
+		  TYPE data									  = {} )
 		: _name{ name }
 		, _tags{ tags }
-		, _description{ description }
-		, _data{ data }
+		, _parent{ parent }
 		, _children{ children }
+		, _description{ description }
 	{
 	}
 
-	const std::string			_name;
-	tags_t						_tags;
-	std::vector< node< TYPE > > _children;
-	std::string					_description;
-	TYPE						_data;
+	const std::string				   _name;
+	tags_t							   _tags;
+	p_node_ptr< TYPE >				   _parent;
+	std::vector< ch_node_ptr< TYPE > > _children;
+	std::string						   _description;
 };
 
 } // namespace actions_tree
