@@ -1,8 +1,6 @@
 #pragma once
 
-#include <memory>
 #include <string>
-#include <variant>
 #include <vector>
 
 // TODO! replace this library in the future with more consistent one
@@ -28,9 +26,6 @@ struct node_args
 template < typename TYPE >
 struct node
 {
-	// TODO! add methods  add_child, add_tag for checking for duplications and circular
-	// dependices
-
 	node( std::string name,
 		  tags_t	  tags					   = {},
 		  std::string description			   = {},
