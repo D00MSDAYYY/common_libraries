@@ -31,7 +31,7 @@ public:
 	const std::string _name{};
 
 	virtual const std::string
-	class_name()
+	class_name() const
 	{
 		return "";
 	} // this func neaded to force users (programmers) to provide a class name which will
