@@ -3,8 +3,6 @@
 #include <string>
 #include <vector>
 
-// TODO! replace this library in the future with more consistent one
-
 namespace actions_tree
 {
 
@@ -40,16 +38,16 @@ struct node
 	std::string						 _description;
 	DATA_TYPE						 _data;
 	std::vector< node< DATA_TYPE > > _children;
-	const node< DATA_TYPE >*		 _parent{nullptr};
+	const node< DATA_TYPE >*		 _parent{ nullptr };
 
-	 const std::string
+	const std::string
 	get_full_path_name()
 	{
-		std::string full_path_name{_name};
-		for(auto p{_parent}; p != nullptr; p = _parent->_parent)
-		{
-			if ( !p->_name.empty() ) full_path_name = p->_name + "_" + full_path_name;
-		}
+		std::string full_path_name{ _name };
+		for ( auto p{ _parent }; p != nullptr; p = _parent->_parent )
+			{
+				if ( !p->_name.empty() ) full_path_name = p->_name + "_" + full_path_name;
+			}
 		return full_path_name;
 	}
 

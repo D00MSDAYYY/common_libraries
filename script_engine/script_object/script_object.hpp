@@ -61,7 +61,7 @@ protected:
 		const auto class_name{ ptr->class_name() };
 		if ( class_name.empty() )
 			{
-				throw std::runtime_error( "Object name cannot be empty" );
+				throw std::runtime_error( "Object class name cannot be empty" );
 			}
 		if ( ngn_ptr->globals() [ class_name ] != sol::lua_nil )
 			{
@@ -69,14 +69,6 @@ protected:
 										  + "' is already registered in global namespace "
 											"(current environment)" );
 			}
-
-		// if ( ngn_ptr->globals() [ name ] != sol::lua_nil ) // TODO i don't is this ok
-		// check or not
-		// 	{
-		// 		throw std::runtime_error( "script::object with name '" + name
-		// 								  + "' is already registered in global namespace "
-		// 									"(current environment)" );
-		// 	}
 	}
 
 	virtual void
