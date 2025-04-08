@@ -1,9 +1,9 @@
 #pragma once
+
 #define SOL_ALL_SAFETIES_ON 1
+
 #include "script_engine.hpp"
 
-#include <memory>
-#include <optional>
 #include <sol/sol.hpp>
 
 namespace script
@@ -22,9 +22,6 @@ public:
 
 	virtual ~object()
 	{
-		std::cout << "in\t" << _name << "\t destructor" << std::endl;
-		std::cout << "use count of " << _ngn_ptr->lua_state()
-				  << " engine : " << _ngn_ptr.use_count() << std::endl;
 		object::self_unregister();
 	}
 
@@ -87,9 +84,6 @@ protected:
 	}
 
 	const engine::ptr _ngn_ptr{};
-
-	// const sol::table				  _slf_tbl{};
-	// const std::optional< sol::table > _prnt_tbl{};
 
 private:
 	object( const object& obj ) = delete;

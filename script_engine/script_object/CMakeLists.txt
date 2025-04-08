@@ -3,9 +3,7 @@ project(script_object)
 
 ########################### find packages here ##################################
 find_package(Lua REQUIRED)
-
 ####################### insert subdirectories here ##############################
-
 #################################################################################
 
 add_library(${PROJECT_NAME} STATIC)
@@ -26,7 +24,6 @@ target_link_libraries(${PROJECT_NAME}
 PUBLIC
 	${LUA_LIBRARIES}
 	script_engine
-
 )
 
 

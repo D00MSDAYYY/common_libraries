@@ -647,8 +647,8 @@ public:
 	/////////////////////////////////////////////////////////////////////
 	~engine()
 	{
-		std::cout << "in\t" << ( is_real() ? "real" : "proxy" )
-				  << " engine \tdestructor" << std::endl;
+		std::cout << "in\t" << ( is_real() ? "real" : "proxy" ) << " engine \tdestructor"
+				  << std::endl;
 	};
 
 private:
