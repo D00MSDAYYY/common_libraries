@@ -47,7 +47,6 @@ struct node
 		std::string full_path_name{ _name };
 		for ( auto p{ _parent }; p != nullptr; p = p->_parent )
 			{
-				std::cout << "here for " << _name << " " << full_path_name << std::endl;
 				if ( !p->_name.empty() ) full_path_name = p->_name + "_" + full_path_name;
 			}
 		return full_path_name;
