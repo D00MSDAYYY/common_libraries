@@ -20,10 +20,7 @@ public:
 	{
 	}
 
-	virtual ~object()
-	{
-		object::self_unregister();
-	}
+	virtual ~object() { object::self_unregister(); }
 
 	const std::string _name{};
 
@@ -31,41 +28,40 @@ public:
 	class_name() const
 	{
 		return "";
-	} // this func neaded to force users (programmers) to provide a class name which will
-	  // be used in template<...> self_register(...).
-	  // UPDATE: change pure virtual (=0) to default 'no value' return ({}) coz sometimes
-	  // some objects will register themself, just use ngn
+	} 
 
 
 protected:
-	template < typename T >
-	void
-	self_register( T* ptr )
+	bool
+	can_self_register()
 	{
-		auto is_ok = dynamic_cast< script::object* >( ptr );
-		if ( !is_ok )
+		if ( !_ngn_ptr )
 			{
-				throw std::runtime_error(
-					"Passed pointer cannot be converted to script::object pointer" );
+				std::cerr << "script engine is not available" << std::endl;
+				return false;
 			}
 
-		const auto ngn_ptr{ ptr->_ngn_ptr };
-		if ( !ngn_ptr ) { throw std::runtime_error( "Parent engine is not available" ); }
-
-		const auto name{ ptr->_name };
-		if ( name.empty() ) { throw std::runtime_error( "Object name cannot be empty" ); }
-
-		const auto class_name{ ptr->class_name() };
-		if ( class_name.empty() )
+		else if ( _name.empty() )
 			{
-				throw std::runtime_error( "Object class name cannot be empty" );
+				std::cerr << "object name cannot be empty" << std::endl;
+				return false;
 			}
-		if ( ngn_ptr->globals() [ class_name ] != sol::lua_nil )
+
+		else if ( class_name().empty() )
 			{
-				throw std::runtime_error( "class with name '" + class_name
-										  + "' is already registered in global namespace "
-											"(current environment)" );
+				std::cerr << "class name cannot be empty" << std::endl;
+				return false;
 			}
+
+		else if ( _ngn_ptr->globals() [ class_name() ] != sol::lua_nil )
+			{
+				std::cerr << "class with name '" + class_name()
+								 + "' is already registered in global namespace "
+								   "(current environment)"
+						  << std::endl;
+				return false;
+			}
+		else { return true; }
 	}
 
 	virtual void
