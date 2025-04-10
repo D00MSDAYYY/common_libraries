@@ -28,7 +28,14 @@ public:
 	class_name() const
 	{
 		return "";
-	} 
+	}
+
+	virtual sol::object
+	make_lua_object_from_this() const 
+	{
+		throw std::runtime_error(
+			"You don't override create_lua_object_from_this() but call it (virtual)" );
+	};
 
 
 protected:
@@ -65,8 +72,10 @@ protected:
 	}
 
 	virtual void
-	self_register() // can throw if name already exist
+	self_register()
 		= 0;
+
+	
 
 	virtual void
 	self_unregister()
