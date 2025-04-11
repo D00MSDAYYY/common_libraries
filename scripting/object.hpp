@@ -1,16 +1,8 @@
 #pragma once
+#include "engine.hpp"
 
-#define SOL_ALL_SAFETIES_ON 1
-
-#include "script_engine.hpp"
-
-#include <sol/sol.hpp>
-
-namespace script
+namespace scripting
 {
-class engine;
-class object;
-
 class object
 {
 public:
@@ -31,12 +23,11 @@ public:
 	}
 
 	virtual sol::object
-	make_lua_object_from_this() const 
+	make_lua_object_from_this() const
 	{
 		throw std::runtime_error(
 			"You don't override create_lua_object_from_this() but call it (virtual)" );
 	};
-
 
 protected:
 	bool
@@ -75,8 +66,6 @@ protected:
 	self_register()
 		= 0;
 
-	
-
 	virtual void
 	self_unregister()
 	{
@@ -96,4 +85,6 @@ private:
 	operator= ( const object& obj )
 		= delete;
 };
-} // namespace script
+
+} 
+

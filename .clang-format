@@ -158,7 +158,7 @@ LineEnding: DeriveLF
 MacroBlockBegin: ""
 MacroBlockEnd: ""
 MainIncludeChar: Quote
-MaxEmptyLinesToKeep: 2
+MaxEmptyLinesToKeep: 1
 NamespaceIndentation: None
 ObjCBinPackProtocolList: Auto
 ObjCBlockIndentWidth: 2

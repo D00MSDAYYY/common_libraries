@@ -5,6 +5,6 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 ####################### insert subdirectories here ##############################
-add_subdirectory(script_engine)
+add_subdirectory(scripting)
 add_subdirectory(actions_tree)
 #################################################################################

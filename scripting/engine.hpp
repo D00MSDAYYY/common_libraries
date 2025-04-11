@@ -4,7 +4,7 @@
 #include <memory>
 #include <sol/sol.hpp>
 
-namespace script
+namespace scripting
 {
 class engine final : public std::enable_shared_from_this< engine >
 {
@@ -668,4 +668,4 @@ private:
 	std::variant< real_engine_data, proxy_engine_data > _data{};
 };
 
-} // namespace script
+} // namespace scripting
