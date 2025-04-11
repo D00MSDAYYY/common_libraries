@@ -5,6 +5,7 @@ project(scripting)
 find_package(Lua REQUIRED)
 ####################### insert subdirectories here ##############################
 add_subdirectory(libraries)
+
 #################################################################################
 
 add_library(${PROJECT_NAME} INTERFACE)
