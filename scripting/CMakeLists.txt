@@ -4,7 +4,7 @@ project(scripting)
 ########################### find packages here ##################################
 find_package(Lua REQUIRED)
 ####################### insert subdirectories here ##############################
-add_subdirectory(sol2)
+add_subdirectory(libraries)
 #################################################################################
 
 add_library(${PROJECT_NAME} INTERFACE)
