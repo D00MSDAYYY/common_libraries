@@ -25,8 +25,7 @@ public:
 	virtual sol::object
 	make_lua_object_from_this() const
 	{
-		throw std::runtime_error(
-			"You don't override create_lua_object_from_this() but call it (virtual)" );
+		return sol::make_object( _ngn_ptr->lua_state(), this );
 	};
 
 protected:
