@@ -627,6 +627,35 @@ public:
 	}
 
 	/////////////////////////////////////////////////////////////////////
+	template < bool read_only = true, typename... Args >
+	state_view&
+	new_enum( const string_view& name, Args&&... args )
+	{
+		if ( is_real() )
+			{
+				return std::get< real_engine_data >( _data ).new_enum(
+					name,
+					std::forward< Args >( args )... );
+			}
+		else
+			{
+				auto& [ _prnt_ptr, _env ]{ std::get< proxy_engine_data >( _data ) };
+				if ( _prnt_ptr )
+					{
+						return _prnt_ptr->new_enum(
+							name,
+							std::forward< Args >(
+								args )... ); // this breakes the encapsulation, but
+											 // fixing this will take half of life
+					}
+				else { throw std::runtime_error( "Parent engine is not available" ); }
+			}
+
+		global.new_enum< read_only >( name, std::forward< Args >( args )... );
+		return *this;
+	}
+
+	/////////////////////////////////////////////////////////////////////
 	lua_State*
 	lua_state() const
 	{
