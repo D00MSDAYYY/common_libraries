@@ -627,15 +627,14 @@ public:
 	}
 
 	/////////////////////////////////////////////////////////////////////
-	template < bool read_only = true, typename... Args >
-	state_view&
-	new_enum( const string_view& name, Args&&... args )
+	template < typename T, bool read_only = true >
+	void
+	new_enum( const sol::string_view& name,
+			  std::initializer_list< std::pair< sol::string_view, T > > items )
 	{
 		if ( is_real() )
 			{
-				return std::get< real_engine_data >( _data ).new_enum(
-					name,
-					std::forward< Args >( args )... );
+				std::get< real_engine_data >( _data ).new_enum( name, items );
 			}
 		else
 			{
@@ -644,15 +643,11 @@ public:
 					{
 						return _prnt_ptr->new_enum(
 							name,
-							std::forward< Args >(
-								args )... ); // this breakes the encapsulation, but
-											 // fixing this will take half of life
+							items ); // this breakes the encapsulation, but
+									 // fixing this will take half of life
 					}
 				else { throw std::runtime_error( "Parent engine is not available" ); }
 			}
-
-		global.new_enum< read_only >( name, std::forward< Args >( args )... );
-		return *this;
 	}
 
 	/////////////////////////////////////////////////////////////////////

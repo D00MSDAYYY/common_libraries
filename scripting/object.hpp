@@ -6,15 +6,14 @@ namespace scripting
 class object
 {
 public:
-	object( const std::string& name, const engine::ptr& ngn_ptr )
+	object( const engine::ptr& ngn_ptr )
 		: _ngn_ptr{ ngn_ptr }
-		, _name{ name }
 	{
 	}
 
-	virtual ~object() { object::self_unregister(); }
+	object( object&& ) = default;
 
-	const std::string _name{};
+	virtual ~object() { }
 
 	virtual const std::string
 	class_name() const
@@ -35,12 +34,6 @@ protected:
 		if ( !_ngn_ptr )
 			{
 				std::cerr << "script engine is not available" << std::endl;
-				return false;
-			}
-
-		else if ( _name.empty() )
-			{
-				std::cerr << "object name cannot be empty" << std::endl;
 				return false;
 			}
 
@@ -68,22 +61,17 @@ protected:
 	virtual void
 	self_unregister()
 	{
-		if ( _ngn_ptr )
-			{
-				_ngn_ptr->globals() [ _name ] = sol::lua_nil;
-				_ngn_ptr->script( "if (print) then print('[unregistered]\t" + _name
-								  + "') end" );
-			}
 	}
 
 	const engine::ptr _ngn_ptr{};
 
 private:
 	object( const object& obj ) = delete;
+
 	object&
 	operator= ( const object& obj )
 		= delete;
 };
 
-} 
+} // namespace scripting
 
