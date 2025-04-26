@@ -22,6 +22,9 @@
 			}                                                                            \
 	}
 
+#define STATIC_REGISTER_IN_LUA()                                                         \
+	static void register_in_lua( const scripting::engine::ptr& ngn_ptr );
+
 namespace scripting
 {
 class object
