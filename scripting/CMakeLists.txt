@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.31.5)
 project(scripting)
 
 ########################### find packages here ##################################
-find_package(Lua REQUIRED)
+# find_package(Lua REQUIRED) # don't use this because i use static_lua version 
 ####################### insert subdirectories here ##############################
 add_subdirectory(libraries)
 
@@ -23,7 +23,7 @@ INTERFACE
 
 target_link_libraries(${PROJECT_NAME} 
 INTERFACE
-	${LUA_LIBRARIES}
+	lua::lib
 	sol2::sol2
 )
 
