@@ -590,7 +590,7 @@ public:
 	{
 		if ( is_real() )
 			{
-				std::get< real_engine_data >( _data ).create_table_with( args... );
+				return std::get< real_engine_data >( _data ).create_table_with( args... );
 			}
 		else
 			{
