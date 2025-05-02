@@ -651,6 +651,79 @@ public:
 	}
 
 	/////////////////////////////////////////////////////////////////////
+	template < typename Sig, typename... Args, typename Key >
+	void
+	set_function( Key&& key, Args&&... args )
+	{
+		if ( is_real() )
+			{
+				std::get< real_engine_data >( _data ).set_function< Sig >(
+					std::forward< Key >( key ),
+					std::forward< Args >( args )... );
+			}
+		else
+			{
+				auto& [ _prnt_ptr, _env ]{ std::get< proxy_engine_data >( _data ) };
+				if ( _prnt_ptr )
+					{
+						return _prnt_ptr->set_function< Sig >(
+							std::forward< Key >( key ),
+							std::forward< Args >( args )... );
+						// this breakes the encapsulation, but
+						// fixing this will take half of life
+					}
+				else { throw std::runtime_error( "Parent engine is not available" ); }
+			}
+	}
+
+	/////////////////////////////////////////////////////////////////////
+	template < typename... Args, typename Key >
+	void
+	set_function( Key&& key, Args&&... args )
+	{
+		if ( is_real() )
+			{
+				std::get< real_engine_data >( _data ).set_function(
+					std::forward< Key >( key ),
+					std::forward< Args >( args )... );
+			}
+		else
+			{
+				auto& [ _prnt_ptr, _env ]{ std::get< proxy_engine_data >( _data ) };
+				if ( _prnt_ptr )
+					{
+						return _prnt_ptr->set_function( std::forward< Key >( key ),
+														std::forward< Args >( args )... );
+					}
+				else { throw std::runtime_error( "Parent engine is not available" ); }
+			}
+	}
+
+	/////////////////////////////////////////////////////////////////////
+	template < typename Name, typename... Args >
+	sol::table
+	create_named_table( Name&& name, Args&&... args )
+	{
+		if ( is_real() )
+			{
+				std::get< real_engine_data >( _data ).create_named_table(
+					std::forward< Name >( name ),
+					std::forward< Args >( args )... );
+			}
+		else
+			{
+				auto& [ _prnt_ptr, _env ]{ std::get< proxy_engine_data >( _data ) };
+				if ( _prnt_ptr )
+					{
+						return _prnt_ptr->create_named_table(
+							std::forward< Name >( name ),
+							std::forward< Args >( args )... );
+					}
+				else { throw std::runtime_error( "Parent engine is not available" ); }
+			}
+	}
+
+	/////////////////////////////////////////////////////////////////////
 	lua_State*
 	lua_state() const
 	{
