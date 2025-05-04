@@ -58,8 +58,8 @@ public:
 	static bool
 	can_register_in_lua( const engine::ptr& ngn_ptr )
 	{
-		auto class_name = CLASS::_class_name; // check if class have class_name string
-											  // (use macros CLASS_NAME_AS_STRING)
+		auto class_name{ CLASS::_class_name }; // check if class have class_name string
+											   // (use macros CLASS_NAME_AS_STRING)
 
 		if ( class_name.empty() )
 			{
